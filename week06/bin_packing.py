@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def first_fit(item_list, bin_size, method='decreasing'):
     '''
@@ -54,20 +55,20 @@ def first_fit(item_list, bin_size, method='decreasing'):
 # ## Testing
 
 # # List of item sizes
-# item_list = [2, 1, 3, 2, 1, 2, 3, 1]
+item_list = [2, 1, 3, 2, 1, 2, 3, 1]
 
 # # Size of bin
-# bin_size = 4
+bin_size = 4
 
 # # Call our function to get the result
-# bins_result = first_fit(item_list, bin_size)
-# bins_expected = [4, 4, 4, 3]
+bins_result = first_fit(item_list, bin_size)
+bins_expected = [4, 4, 4, 3]
 
 # # "assert X, error_message" does nothing if X is True,
 # # but raises an error if X is False, optionally with an error message (string)
-# msg = f'Incorrect result: expected {bins_expected}, got {bins_result} instead.'
-# assert bins_result == bins_expected, msg
-# print('Test passed.')
+msg = f'Incorrect result: expected {bins_expected}, got {bins_result} instead.'
+assert bins_result == bins_expected, msg
+print('Test passed.')
 
 
 ## Which method is better: sorting up, down, or not?
@@ -80,6 +81,8 @@ bin_sizes = 5 * np.random.rand(number_of_sets) + 5
 
 item_sets = 10 * np.random.rand(number_of_sets, number_of_items)
 
+number_of_bins = np.zeros((number_of_sets, 3))
+
 for i in range(number_of_sets):
     bins_decreasing = first_fit(item_sets[i, :], bin_sizes[i], method='decreasing')
     bins_increasing = first_fit(item_sets[i, :], bin_sizes[i], method='increasing')
@@ -87,3 +90,20 @@ for i in range(number_of_sets):
 
     # Which uses the fewest bins?
     # ...
+    number_of_bins[i, 0] = len(bins_decreasing)
+    number_of_bins[i, 1] = len(bins_increasing)
+    number_of_bins[i, 2] = len(bins_none)
+#print(number_of_bins)
+
+fig, ax = plt.subplots()
+ax.hist(number_of_bins[:,0], alpha = 0.5, label = 'Decreasing')
+ax.hist(number_of_bins[:,1], alpha = 0.5, label = 'increasing')
+ax.hist(number_of_bins[:,2], alpha = 0.5, label = 'No sorting')
+ax.tick_params(labelsize = 8)
+ax.set(xlabel = 'Number of Bins', ylabel = 'Frequency')
+ax.legend()
+
+
+plt.show()
+
+
